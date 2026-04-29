@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Мої записи — Mediculus{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="fw-bold mb-1">Мої записи</h1>
+            <p class="text-muted">Управляйте вашими записами до лікарів</p>
+        </div>
+        <a href="/doctors/" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>Записатись
+        </a>
+    </div>
+
+    <!-- Фільтр за діапазоном дат -->
+    <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body py-3">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label small text-muted mb-1">Період</label>
+                    <select class="form-select" id="date-range-filter">
+                        <option value="all">За весь час</option>
+                        <option value="30">За 30 днів</option>
+                        <option value="180">За 180 днів</option>
+                        <option value="custom">Інший період</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-none" id="date-from-col">
+                    <label class="form-label small text-muted mb-1">Від</label>
+                    <input type="date" class="form-control" id="date-from">
+                </div>
+                <div class="col-md-3 d-none" id="date-to-col">
+                    <label class="form-label small text-muted mb-1">До</label>
+                    <input type="date" class="form-control" id="date-to">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Фільтри статусу -->
+    <ul class="nav nav-pills mb-4" id="status-tabs">
+        <li class="nav-item">
+            <button class="nav-link active" data-status="all">
+                <i class="bi bi-list me-1"></i>Всі
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-status="planned">
+                <i class="bi bi-clock me-1"></i>Заплановані
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-status="completed">
+                <i class="bi bi-check-circle me-1"></i>Завершені
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-status="cancelled">
+                <i class="bi bi-x-circle me-1"></i>Скасовані
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-status="missed">
+                <i class="bi bi-exclamation-circle me-1"></i>Пропущені
+            </button>
+        </li>
+    </ul>
+
+    <!-- Список записів -->
+    <div id="appointments-list">
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2 text-muted">Завантаження...</p>
+        </div>
+    </div>
+
+    <!-- Кнопка "Завантажити ще" -->
+    <div class="text-center mt-3 d-none" id="load-more-container">
+        <button class="btn btn-outline-primary" id="load-more-btn">
+            <i class="bi bi-arrow-down-circle me-1"></i>Завантажити ще
+        </button>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/appointments.js"></script>
+{% endblock %}

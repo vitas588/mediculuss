@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% block title %}Кабінет лікаря — Mediculus{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h1 class="fw-bold mb-1">Кабінет лікаря</h1>
+            <p class="text-muted mb-0" id="cabinet-subtitle">Ласкаво просимо!</p>
+        </div>
+        <div class="text-end">
+            <span class="badge bg-primary fs-6 px-3 py-2">
+                <i class="bi bi-calendar-day me-1"></i>
+                <span id="today-date"></span>
+            </span>
+        </div>
+    </div>
+
+    <!-- Статистика лікаря -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-sm-6">
+            <a id="stat-card-today" href="/appointments/doctor/" class="card border-0 shadow-sm stat-card text-decoration-none">
+                <div class="card-body p-4 text-center">
+                    <i class="bi bi-calendar-day text-primary mb-2" style="font-size:1.8rem"></i>
+                    <h3 class="fw-bold text-primary mb-0" id="stat-today">—</h3>
+                    <small class="text-muted">Сьогодні</small>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <a href="/appointments/doctor/?status=planned" class="card border-0 shadow-sm stat-card text-decoration-none">
+                <div class="card-body p-4 text-center">
+                    <i class="bi bi-calendar-week text-info mb-2" style="font-size:1.8rem"></i>
+                    <h3 class="fw-bold text-info mb-0" id="stat-upcoming">—</h3>
+                    <small class="text-muted">Заплановані</small>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <a href="/appointments/doctor/?status=completed" class="card border-0 shadow-sm stat-card text-decoration-none">
+                <div class="card-body p-4 text-center">
+                    <i class="bi bi-check-circle text-success mb-2" style="font-size:1.8rem"></i>
+                    <h3 class="fw-bold text-success mb-0" id="stat-completed">—</h3>
+                    <small class="text-muted">Завершені</small>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <a href="/appointments/doctor/" class="card border-0 shadow-sm stat-card text-decoration-none">
+                <div class="card-body p-4 text-center">
+                    <i class="bi bi-people text-warning mb-2" style="font-size:1.8rem"></i>
+                    <h3 class="fw-bold text-warning mb-0" id="stat-total">—</h3>
+                    <small class="text-muted">Всього пацієнтів</small>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Записи на сьогодні -->
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-calendar-day me-2 text-primary"></i>Сьогодні
+                    </h5>
+                    <a href="/appointments/doctor/" class="btn btn-sm btn-outline-primary">Всі записи</a>
+                </div>
+                <div class="card-body p-0">
+                    <div id="today-appointments">
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-primary spinner-border-sm"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Профіль лікаря -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-person-badge me-2 text-primary"></i>Мій профіль
+                    </h5>
+                </div>
+                <div class="card-body text-center p-4">
+                    <!-- Фото лікаря -->
+                    <div class="position-relative d-inline-block mb-3">
+                        <img src="/static/images/doctor-default.png" alt="Фото"
+                             class="rounded-circle border shadow"
+                             style="width:100px;height:100px;object-fit:cover;"
+                             id="cabinet-photo">
+                        <label for="photo-upload" class="position-absolute bottom-0 end-0
+                               btn btn-primary btn-sm rounded-circle p-1"
+                               title="Змінити фото" style="width:30px;height:30px">
+                            <i class="bi bi-camera-fill" style="font-size:0.8rem"></i>
+                        </label>
+                        <input type="file" id="photo-upload" accept="image/*" class="d-none">
+                    </div>
+                    <h5 class="fw-bold mb-1" id="cabinet-name">—</h5>
+                    <p class="text-primary small mb-3" id="cabinet-specialty">—</p>
+
+                    <div class="text-start small">
+                        <div class="d-flex justify-content-between border-bottom py-2">
+                            <span class="text-muted">Досвід</span>
+                            <span class="fw-semibold" id="cabinet-experience">—</span>
+                        </div>
+                        <div class="d-flex justify-content-between border-bottom py-2">
+                            <span class="text-muted">Тривалість прийому</span>
+                            <span class="fw-semibold" id="cabinet-slot-duration">—</span>
+                        </div>
+                    </div>
+
+                    <!-- Розклад -->
+                    <div class="mt-3 text-start">
+                        <h6 class="fw-semibold mb-2">Мій розклад</h6>
+                        <div id="cabinet-schedule">
+                            <div class="text-center text-muted py-2">
+                                <div class="spinner-border spinner-border-sm"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальне вікно: завершення прийому -->
+<div class="modal fade" id="completeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-check-circle me-2"></i>Завершення прийому
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="complete-appointment-id">
+                <p class="text-muted mb-3">Пацієнт: <strong id="complete-patient-name"></strong></p>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Діагноз <span class="text-danger">*</span></label>
+                    <textarea class="form-control" id="complete-diagnosis" rows="2"
+                              placeholder="Введіть діагноз..." required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Призначення / лікування <span class="text-danger">*</span></label>
+                    <textarea class="form-control" id="complete-treatment" rows="3"
+                              placeholder="Опишіть призначення..." required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Приватні нотатки лікаря</label>
+                    <textarea class="form-control" id="complete-notes" rows="2"
+                              placeholder="Внутрішні нотатки (не видно пацієнту)..."></textarea>
+                </div>
+
+                <div class="alert alert-danger d-none" id="complete-error"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Скасувати</button>
+                <button type="button" class="btn btn-success" id="complete-confirm-btn">
+                    <i class="bi bi-check-circle me-1"></i>Завершити прийом
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/doctor-cabinet.js"></script>
+{% endblock %}

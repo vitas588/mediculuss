@@ -1,0 +1,384 @@
+/*
+  ============================================
+  Mediculus Hospital - Головні стилі
+  ============================================
+  Власні стилі для сайту лікарні Mediculus.
+  Bootstrap 5 використовується як основа.
+*/
+
+/* ---- Шрифт для дислексиків (Кирилиця + Латиниця) ---- */
+@font-face {
+    font-family: 'OpenDyslexicUkr';
+    src: url('/static/fonts/inclusion.ukr.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* ---- Базові змінні ---- */
+:root {
+    --primary: #0d6efd;
+    --primary-light: #e8f0ff;
+    --success-light: #e8f5e9;
+    --font-main: 'Inter', sans-serif;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,.06);
+    --shadow-md: 0 4px 16px rgba(0,0,0,.10);
+    --border-radius: 12px;
+    --transition: .2s ease;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: #f8f9fa;
+    color: #212529;
+    /* STICKY FOOTER: min-height та flex задані в base.html через Bootstrap-класи */
+}
+
+/* ---- Navbar ---- */
+.navbar {
+    padding: .75rem 0;
+}
+.brand-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--primary-light);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ---- Hero секція ---- */
+.hero-section {
+    background: linear-gradient(135deg, #f0f4ff 0%, #fafafa 100%);
+    padding: 5rem 0;
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+}
+
+.min-vh-hero { min-height: 70vh; }
+
+.search-card {
+    border-radius: var(--border-radius) !important;
+    box-shadow: var(--shadow-md) !important;
+}
+
+/* Ілюстрація hero */
+.hero-illustration {
+    position: relative;
+    display: inline-block;
+}
+.hero-icon-circle {
+    width: 300px;
+    height: 300px;
+    background: var(--primary-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+.floating-card {
+    position: absolute;
+    border-radius: 12px;
+    animation: float 3s ease-in-out infinite;
+}
+.card-1 {
+    top: 20px;
+    right: -20px;
+    animation-delay: 0s;
+}
+.card-2 {
+    bottom: 30px;
+    left: -30px;
+    animation-delay: 1.5s;
+}
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* ---- Badge soft ---- */
+.bg-primary-soft { background-color: var(--primary-light); }
+
+/* ---- Картки спеціальностей ---- */
+.specialty-card {
+    cursor: pointer;
+    border-radius: var(--border-radius) !important;
+    transition: var(--transition);
+    border: 2px solid transparent !important;
+}
+.specialty-card:hover {
+    border-color: var(--primary) !important;
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md) !important;
+}
+.specialty-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: .5rem;
+}
+
+/* ---- Кроки (How it works) ---- */
+.step-card {
+    border-radius: var(--border-radius) !important;
+    transition: var(--transition);
+}
+.step-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md) !important;
+}
+.step-card-featured {
+    background: linear-gradient(135deg, var(--primary), #0056d3) !important;
+}
+.step-number {
+    width: 36px;
+    height: 36px;
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+}
+.step-number-featured {
+    background: rgba(255,255,255,.2);
+    color: white;
+}
+
+/* ---- Картки лікарів ---- */
+.doctor-card {
+    border-radius: var(--border-radius) !important;
+    transition: var(--transition);
+}
+.doctor-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md) !important;
+}
+.doctor-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-light);
+}
+.doctor-avatar-placeholder {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 1.5rem;
+}
+
+/* ---- Слоти для запису ---- */
+.slot-btn {
+    min-width: 80px;
+    font-size: .875rem;
+    border-radius: 8px;
+    transition: var(--transition);
+}
+.slot-btn.selected {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+/* ---- Статусні бейджи ---- */
+.status-planned  { background: #e8f0ff; color: var(--primary); }
+.status-completed { background: var(--success-light); color: #198754; }
+.status-cancelled { background: #fce8e8; color: #dc3545; }
+.status-missed    { background: #fff3e0; color: #fd7e14; }
+
+/* ---- Skeleton loader ---- */
+.skeleton-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, #e9ecef 25%, #f8f9fa 50%, #e9ecef 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+.skeleton-line {
+    height: 14px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #e9ecef 25%, #f8f9fa 50%, #e9ecef 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    margin-bottom: 8px;
+}
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* ---- Картки записів ---- */
+.appointment-card {
+    border-radius: var(--border-radius) !important;
+    transition: var(--transition);
+}
+.appointment-card:hover {
+    box-shadow: var(--shadow-md) !important;
+}
+
+/* ---- Швидкі посилання ---- */
+.quick-link-card {
+    border-radius: var(--border-radius) !important;
+    transition: var(--transition);
+}
+.quick-link-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md) !important;
+    border-color: var(--primary) !important;
+}
+
+/* ---- Статистичні картки ---- */
+.stat-card {
+    border-radius: var(--border-radius) !important;
+}
+
+/* ---- Офканвас сповіщень ---- */
+.notification-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: background .15s;
+}
+.notification-item:hover { background: #f8f9fa; }
+.notification-item.unread { border-left: 3px solid var(--primary); background: var(--primary-light); }
+.notification-item.unread:hover { background: #dce8ff; }
+
+/* ---- Профіль лікаря: розклад ---- */
+.schedule-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: .875rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+.schedule-row:last-child { border-bottom: none; }
+.schedule-day { color: #6c757d; }
+.schedule-time { font-weight: 600; }
+.schedule-closed { color: #dc3545; font-style: italic; }
+
+/* ---- Форма входу/реєстрації ---- */
+.card .form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 .2rem rgba(13,110,253,.15);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+    .hero-section { padding: 3rem 0; }
+    .hero-icon-circle { width: 200px; height: 200px; }
+    .floating-card { display: none; }
+}
+
+/* ---- Масштаб шрифту (панель доступності) ---- *
+ *  Клас додається до <html> лише при значеннях    *
+ *  відмінних від 1.0. При scale 1.0 — жодного     *
+ *  класу: сайт виглядає абсолютно як оригінал.    *
+ * ------------------------------------------------ */
+html.font-scale-075 { font-size: 87.5%;  }   /* 14px */
+html.font-scale-125 { font-size: 112.5%; }   /* 18px */
+html.font-scale-150 { font-size: 125%;   }   /* 20px */
+
+/* Навбар: тільки ущільнення горизонтальних відступів при великих масштабах
+   (font-size не перевизначаємо — всі елементи масштабуються рівномірно) */
+html.font-scale-125 .navbar .nav-link {
+    padding-left:  0.6rem !important;
+    padding-right: 0.6rem !important;
+}
+html.font-scale-150 .navbar .nav-link {
+    padding-left:  0.45rem !important;
+    padding-right: 0.45rem !important;
+}
+html.font-scale-125 .navbar .btn,
+html.font-scale-150 .navbar .btn {
+    padding-left:  0.5rem !important;
+    padding-right: 0.5rem !important;
+}
+
+/* Placeholder у формах: дещо дрібніший при великих масштабах
+   щоб текст-підказка не обрізався */
+html.font-scale-125 .form-control::placeholder,
+html.font-scale-150 .form-control::placeholder {
+    font-size: 0.825rem !important;
+}
+html.font-scale-150 .form-select {
+    font-size: 0.875rem !important;
+}
+
+/* Email / text input: показувати "..." якщо значення не вміщується */
+input[type="email"],
+input[type="text"],
+input[type="search"] {
+    text-overflow: ellipsis;
+}
+
+/* Записи пацієнта: кнопки дій — стовпчик справа при великих масштабах */
+html.font-scale-125 .appointment-actions,
+html.font-scale-150 .appointment-actions {
+    display: grid !important;
+    grid-template-columns: max-content !important;
+    justify-content: end !important;
+    row-gap: 4px !important;
+}
+html.font-scale-125 .appointment-actions .btn,
+html.font-scale-150 .appointment-actions .btn {
+    width: 100% !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    margin-bottom: 0 !important;
+}
+
+/* Футер: контакти не переносяться при будь-якому масштабі */
+footer .contact-item {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    gap: .4rem;
+}
+footer .contact-item i {
+    flex-shrink: 0;
+    margin-top: .15rem;
+}
+footer .contact-item span {
+    word-break: break-word;
+    min-width: 0;
+}
+
+/* Лічильник сповіщень — компактний */
+#notif-badge {
+    font-size: 10px !important;
+    padding: 2px 4px !important;
+    min-width: 16px;
+    height: 16px;
+    line-height: 12px;
+}
+
+/* Панель доступності та FAB — фіксований розмір,
+   не реагують на зміну font-size html */
+.accessibility-panel,
+.accessibility-panel * {
+    font-size: 16px !important;
+}
+.accessibility-panel h5 {
+    font-size: 18px !important;
+}
+
+/* ---- Утиліти ---- */
+.cursor-pointer { cursor: pointer; }
+.border-radius-lg { border-radius: var(--border-radius) !important; }
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}

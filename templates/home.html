@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+
+{% block title %}Mediculus — Ваша лікарня онлайн{% endblock %}
+
+{% block content %}
+
+<!-- Сповіщення (показується JS при ?account_deleted=1 тощо) -->
+<div id="home-alert" class="alert alert-success alert-dismissible fade show d-none m-0 rounded-0" role="alert">
+    <div class="container">
+        <i class="bi bi-check-circle me-2"></i><span id="home-alert-msg"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+</div>
+
+<!-- ============================================
+     HERO секція
+     ============================================ -->
+<section class="hero-section py-5">
+    <div class="container">
+        <div class="row align-items-center min-vh-hero">
+            <div class="col-lg-7 mb-5 mb-lg-0">
+                <span class="badge bg-primary-soft text-primary mb-3 px-3 py-2 rounded-pill">
+                    <i class="bi bi-heart-pulse me-1"></i> Онлайн-запис 24/7
+                </span>
+                <h1 class="display-4 fw-bold mb-4">
+                    Якісна медична допомога
+                    <span class="text-primary">коли вам зручно</span>
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Лікарня Mediculus — ваш надійний партнер у здоров'ї.
+                    Записуйтеся до досвідчених лікарів онлайн без черг.
+                </p>
+
+                <!-- Форма пошуку -->
+                <div class="card border-0 shadow-lg p-4 search-card">
+                    <h6 class="fw-semibold mb-3">
+                        <i class="bi bi-search me-2 text-primary"></i>Знайдіть лікаря
+                    </h6>
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" id="hero-search"
+                                   placeholder="Ім'я або прізвище лікаря">
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select" id="hero-specialty">
+                                <option value="">Всі спеціальності</option>
+                                <!-- Заповнюється JS -->
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-primary w-100" id="hero-search-btn">
+                                <i class="bi bi-search me-1"></i>Пошук
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5 text-center d-none d-lg-block">
+                <div class="hero-illustration">
+                    <div class="hero-icon-circle">
+                        <i class="bi bi-hospital text-primary" style="font-size: 8rem;"></i>
+                    </div>
+                    <!-- Floating cards — дані завантажуються через JS -->
+                    <div class="floating-card card-1 card shadow-lg border-0 p-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="badge bg-success rounded-circle p-2">
+                                <i class="bi bi-check-lg text-white"></i>
+                            </div>
+                            <div>
+                                <!-- ВИПРАВЛЕНО: реальна кількість завершених записів -->
+                                <small class="text-muted d-block">Всього записів</small>
+                                <strong id="hero-completed-count">—</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="floating-card card-2 card shadow-lg border-0 p-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="badge bg-primary rounded-circle p-2">
+                                <i class="bi bi-people-fill text-white"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block">Лікарів</small>
+                                <strong id="hero-doctors-count">—</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================
+     Спеціальності (клікабельні іконки)
+     ============================================ -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Наші спеціальності</h2>
+            <p class="text-muted">Оберіть напрямок та знайдіть потрібного лікаря</p>
+        </div>
+
+        <div class="row g-3 justify-content-center" id="specialties-grid">
+            <!-- Заповнюється JS -->
+            <div class="col-12 text-center">
+                <div class="spinner-border text-primary" role="status"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================
+     Як записатись (3 кроки)
+     ============================================ -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Як записатись до лікаря</h2>
+            <p class="text-muted">Просто та швидко за 3 кроки</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card border-0 text-center h-100 step-card">
+                    <div class="card-body p-4">
+                        <div class="step-number">1</div>
+                        <div class="step-icon mb-3">
+                            <i class="bi bi-person-plus text-primary" style="font-size:2.5rem"></i>
+                        </div>
+                        <h5 class="fw-bold">Зареєструйтесь</h5>
+                        <p class="text-muted">
+                            Створіть безкоштовний акаунт пацієнта за кілька хвилин.
+                            Потрібен лише email та основні дані.
+                        </p>
+                        <a href="/register/" class="btn btn-outline-primary btn-sm">Зареєструватись</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 text-center h-100 step-card step-card-featured">
+                    <div class="card-body p-4">
+                        <div class="step-number step-number-featured">2</div>
+                        <div class="step-icon mb-3">
+                            <i class="bi bi-search text-white" style="font-size:2.5rem"></i>
+                        </div>
+                        <h5 class="fw-bold text-white">Знайдіть лікаря</h5>
+                        <p class="text-white-50">
+                            Знайдіть потрібного спеціаліста за ім'ям або спеціальністю.
+                            Перегляньте профіль, досвід та розклад.
+                        </p>
+                        <a href="/doctors/" class="btn btn-light btn-sm">Переглянути лікарів</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card border-0 text-center h-100 step-card">
+                    <div class="card-body p-4">
+                        <div class="step-number">3</div>
+                        <div class="step-icon mb-3">
+                            <i class="bi bi-calendar-check text-primary" style="font-size:2.5rem"></i>
+                        </div>
+                        <h5 class="fw-bold">Запишіться онлайн</h5>
+                        <p class="text-muted">
+                            Оберіть зручний день та час. Отримайте підтвердження
+                            та нагадування про прийом.
+                        </p>
+                        <a href="/doctors/" class="btn btn-outline-primary btn-sm">Записатись</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================
+     Чому обирають нас
+     ============================================ -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Чому обирають Mediculus</h2>
+            <p class="text-white-50">Ваше здоров'я — наш головний пріоритет</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="text-center">
+                    <i class="bi bi-award mb-3" style="font-size:2.5rem"></i>
+                    <h5 class="fw-bold">Досвідчені лікарі</h5>
+                    <p class="text-white-50">Середній досвід наших спеціалістів — понад 10 років практики</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="text-center">
+                    <i class="bi bi-clock-history mb-3" style="font-size:2.5rem"></i>
+                    <h5 class="fw-bold">Запис 24/7</h5>
+                    <p class="text-white-50">Записуйтеся в будь-який зручний час без дзвінків та черг</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="text-center">
+                    <i class="bi bi-shield-check mb-3" style="font-size:2.5rem"></i>
+                    <h5 class="fw-bold">Конфіденційність</h5>
+                    <p class="text-white-50">Ваші медичні дані надійно захищені та доступні тільки вам</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="text-center">
+                    <i class="bi bi-file-medical mb-3" style="font-size:2.5rem"></i>
+                    <h5 class="fw-bold">Електронна картка</h5>
+                    <p class="text-white-50">Всі результати прийомів та призначення в одному місці</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/home.js"></script>
+{% endblock %}

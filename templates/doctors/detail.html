@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}Профіль лікаря — Mediculus{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Головна</a></li>
+            <li class="breadcrumb-item"><a href="/doctors/">Лікарі</a></li>
+            <li class="breadcrumb-item active" id="breadcrumb-name">Профіль лікаря</li>
+        </ol>
+    </nav>
+
+    <!-- Loader -->
+    <div class="text-center py-5" id="doctor-loader">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2 text-muted">Завантаження...</p>
+    </div>
+
+    <!-- Профіль (прихований до завантаження) -->
+    <div class="d-none" id="doctor-content">
+        <div class="row g-4">
+            <!-- Лівий блок: фото та основна інфо -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm text-center p-4 mb-3">
+                    <div class="mb-3">
+                        <img src="/static/images/doctor-default.svg" alt="Фото лікаря"
+                             class="rounded-circle border shadow"
+                             style="width:120px;height:120px;object-fit:cover;"
+                             id="doctor-photo" onerror="this.onerror=null;this.src='/static/images/doctor-default.svg'">
+                    </div>
+                    <h4 class="fw-bold mb-1" id="doctor-name">—</h4>
+                    <p class="text-primary fw-semibold mb-2" id="doctor-specialty">—</p>
+
+                    <div class="d-flex justify-content-center gap-3 mb-3">
+                        <div class="text-center">
+                            <div class="fw-bold text-primary fs-4" id="doctor-experience">—</div>
+                            <small class="text-muted" id="doctor-experience-label">років досвіду</small>
+                        </div>
+                        <div class="vr"></div>
+                        <div class="text-center">
+                            <div class="fw-bold text-success fs-4" id="doctor-slot">—</div>
+                            <small class="text-muted">хв/прийом</small>
+                        </div>
+                    </div>
+
+                    <div class="text-start small text-muted" id="doctor-contacts">
+                        <div class="mb-1" id="doctor-phone-row">
+                            <i class="bi bi-telephone me-2"></i><span id="doctor-phone">—</span>
+                        </div>
+                        <div>
+                            <i class="bi bi-envelope me-2"></i><span id="doctor-email">—</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Розклад -->
+                <div class="card border-0 shadow-sm p-3">
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-calendar3 me-2 text-primary"></i>Розклад прийому
+                    </h6>
+                    <div id="doctor-schedule">
+                        <div class="text-center text-muted py-2">Завантаження розкладу...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Правий блок: опис + запис -->
+            <div class="col-lg-8">
+                <!-- Опис -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">
+                            <i class="bi bi-info-circle me-2 text-primary"></i>Про лікаря
+                        </h5>
+                        <p class="text-muted" id="doctor-description">—</p>
+                    </div>
+                </div>
+
+                <!-- Блок запису -->
+                <div class="card border-0 shadow-sm" id="booking-card">
+                    <div class="card-header bg-primary text-white py-3">
+                        <h5 class="mb-0">
+                            <i class="bi bi-calendar-plus me-2"></i>Записатись на прийом
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+
+                        <!-- Для незареєстрованих -->
+                        <div id="booking-auth-required" class="d-none text-center py-3">
+                            <i class="bi bi-lock text-muted" style="font-size:2rem"></i>
+                            <p class="mt-2 text-muted">Для запису необхідно увійти в систему</p>
+                            <a href="/login/" class="btn btn-primary me-2">Увійти</a>
+                            <a href="/register/" class="btn btn-outline-primary">Зареєструватись</a>
+                        </div>
+
+                        <!-- Для пацієнтів -->
+                        <div id="booking-form-section">
+                            <!-- Вибір дати -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Оберіть дату</label>
+                                <input type="date" class="form-control" id="booking-date">
+                                <div class="form-text">Доступний запис на 14 днів вперед</div>
+                            </div>
+
+                            <!-- Доступні слоти -->
+                            <div class="mb-3" id="slots-section" style="display:none">
+                                <label class="form-label fw-semibold">Оберіть час</label>
+                                <div class="d-flex flex-wrap gap-2" id="slots-grid">
+                                    <!-- Заповнюється JS -->
+                                </div>
+                            </div>
+
+                            <div class="text-center py-3 d-none" id="slots-loading">
+                                <div class="spinner-border spinner-border-sm text-primary me-2"></div>
+                                Завантаження слотів...
+                            </div>
+
+                            <div class="alert alert-info d-none" id="slots-empty">
+                                <i class="bi bi-info-circle me-2"></i>На цю дату немає вільних слотів
+                            </div>
+
+                            <!-- Причина звернення -->
+                            <div class="mb-3" id="booking-reason-section" style="display:none">
+                                <label class="form-label fw-semibold">Причина звернення (необов'язково)</label>
+                                <textarea class="form-control" id="booking-reason" rows="2"
+                                          placeholder="Опишіть причину звернення або симптоми..."></textarea>
+                            </div>
+
+                            <!-- Підтвердження вибраного -->
+                            <div class="alert alert-success d-none" id="booking-summary">
+                                <i class="bi bi-check-circle me-2"></i>
+                                Ви обрали: <strong id="booking-summary-text"></strong>
+                            </div>
+
+                            <button class="btn btn-primary w-100" id="book-btn" disabled>
+                                <span class="spinner-border spinner-border-sm d-none me-2" id="book-spinner"></span>
+                                <i class="bi bi-calendar-check me-2"></i>Підтвердити запис
+                            </button>
+
+                            <div class="alert alert-danger mt-3 d-none" id="booking-error"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const DOCTOR_ID = {{ doctor_id }};
+</script>
+<script src="/static/js/doctor-detail.js"></script>
+{% endblock %}

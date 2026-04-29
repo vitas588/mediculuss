@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}Лікарі — Mediculus{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <!-- Заголовок та фільтри -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="fw-bold mb-1">Наші лікарі</h1>
+            <p class="text-muted">Знайдіть потрібного спеціаліста та запишіться онлайн</p>
+        </div>
+    </div>
+
+    <!-- Фільтри пошуку -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-3">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label small text-muted mb-1">Пошук за ім'ям</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" class="form-control" id="search-input"
+                               placeholder="Ім'я або прізвище лікаря">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small text-muted mb-1">Спеціальність</label>
+                    <select class="form-select" id="specialty-filter">
+                        <option value="">Всі спеціальності</option>
+                        {% for specialty in specialties %}
+                        <option value="{{ specialty.slug }}">
+                            {{ specialty.icon }} {{ specialty.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary w-100" id="search-btn">
+                        <i class="bi bi-search me-1"></i>Шукати
+                    </button>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-outline-secondary w-100" id="reset-btn">
+                        <i class="bi bi-x-circle me-1"></i>Скинути
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Кількість результатів -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-muted" id="results-count">Завантаження...</span>
+    </div>
+
+    <!-- Список лікарів -->
+    <div class="row g-4" id="doctors-grid">
+        <!-- Skeleton loader -->
+        {% for i in "123456" %}
+        <div class="col-md-6 col-lg-4 doctor-skeleton">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="skeleton-circle me-3"></div>
+                        <div class="flex-grow-1">
+                            <div class="skeleton-line w-75 mb-1"></div>
+                            <div class="skeleton-line w-50"></div>
+                        </div>
+                    </div>
+                    <div class="skeleton-line w-100 mb-1"></div>
+                    <div class="skeleton-line w-75"></div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Кнопка "Завантажити ще" -->
+    <div class="text-center mt-4 d-none" id="load-more-container">
+        <button class="btn btn-outline-primary" id="load-more-btn">
+            <i class="bi bi-arrow-down-circle me-1"></i>Завантажити ще
+        </button>
+    </div>
+
+    <!-- Немає результатів -->
+    <div class="text-center py-5 d-none" id="no-results">
+        <i class="bi bi-search text-muted" style="font-size:3rem"></i>
+        <h5 class="mt-3 text-muted">Лікарів не знайдено</h5>
+        <p class="text-muted">Спробуйте змінити параметри пошуку</p>
+        <button class="btn btn-outline-primary" id="reset-btn-2">Показати всіх лікарів</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/doctors.js"></script>
+{% endblock %}

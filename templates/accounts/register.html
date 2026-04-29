@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block title %}Реєстрація — Mediculus{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+
+            <div class="text-center mb-4">
+                <i class="bi bi-person-plus-fill text-primary" style="font-size:3rem"></i>
+                <h2 class="fw-bold mt-2">Реєстрація пацієнта</h2>
+                <p class="text-muted">Створіть акаунт та записуйтеся до лікарів онлайн</p>
+            </div>
+
+            <div class="alert alert-danger d-none" id="register-error" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <span id="register-error-msg"></span>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form id="register-form" novalidate>
+
+                        <!-- Прізвище, Ім'я, По-батькові -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Прізвище <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="reg-last-name"
+                                       name="last_name" placeholder="Іваненко" required>
+                                <div class="invalid-feedback">Вкажіть прізвище</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Ім'я <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="reg-first-name"
+                                       name="first_name" placeholder="Іван" required>
+                                <div class="invalid-feedback">Вкажіть ім'я</div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">По-батькові</label>
+                            <input type="text" class="form-control" id="reg-patronymic"
+                                   name="patronymic" placeholder="Петрович">
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-envelope text-muted"></i>
+                                </span>
+                                <input type="email" class="form-control" id="reg-email"
+                                       name="email" placeholder="your@email.com" required>
+                            </div>
+                        </div>
+
+                        <!-- Телефон -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Телефон</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-telephone text-muted"></i>
+                                </span>
+                                <input type="tel" class="form-control" id="reg-phone"
+                                       name="phone" placeholder="+380501234567">
+                            </div>
+                        </div>
+
+                        <!-- Дата народження -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Дата народження</label>
+                            <input type="date" class="form-control" id="reg-dob"
+                                   name="date_of_birth" max="{{ today }}">
+                        </div>
+
+                        <!-- Стать -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Стать</label>
+                            <select class="form-select" id="reg-gender" name="gender">
+                                <option value="">— Оберіть —</option>
+                                <option value="male">Чоловік</option>
+                                <option value="female">Жінка</option>
+                            </select>
+                        </div>
+
+                        <!-- Пароль -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Пароль <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-lock text-muted"></i>
+                                </span>
+                                <input type="password" class="form-control" id="reg-password"
+                                       name="password" placeholder="Мінімум 8 символів" required minlength="8">
+                                <button class="btn btn-outline-secondary" type="button" id="toggle-pass">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                            <div class="form-text">Мінімум 8 символів, хоча б одна літера та одна цифра</div>
+                        </div>
+
+                        <!-- Підтвердження паролю -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Підтвердити пароль <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-lock-fill text-muted"></i>
+                                </span>
+                                <input type="password" class="form-control" id="reg-password-confirm"
+                                       name="password_confirm" placeholder="Повторіть пароль" required>
+                            </div>
+                        </div>
+
+                        <!-- Погодження з Політикою конфіденційності -->
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="reg-privacy" required>
+                                <label class="form-check-label small" for="reg-privacy">
+                                    Я погоджуюсь з
+                                    <a href="/privacy-policy/" target="_blank" class="text-primary">Політикою конфіденційності</a>
+                                    <span class="text-danger">*</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2" id="register-btn" disabled>
+                            <span class="spinner-border spinner-border-sm d-none me-2" id="register-spinner"></span>
+                            <i class="bi bi-person-check me-2"></i>Зареєструватись
+                        </button>
+
+                    </form>
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <p class="text-muted mb-0">
+                    Вже є акаунт?
+                    <a href="/login/" class="text-primary fw-semibold">Увійти</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/register.js"></script>
+{% endblock %}

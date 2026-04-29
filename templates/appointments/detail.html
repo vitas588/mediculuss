@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}Деталі запису — Mediculus{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Головна</a></li>
+            <li class="breadcrumb-item"><a href="/appointments/" id="breadcrumb-appointments-link">Мої записи</a></li>
+            <li class="breadcrumb-item active">Деталі запису</li>
+        </ol>
+    </nav>
+
+    <div class="text-center py-5" id="detail-loader">
+        <div class="spinner-border text-primary" role="status"></div>
+    </div>
+
+    <div class="d-none" id="detail-content">
+        <div class="row g-4">
+            <div class="col-lg-8">
+
+                <!-- Основна інформація -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white border-bottom py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 fw-bold">
+                                <i class="bi bi-calendar-event me-2 text-primary"></i>Запис на прийом
+                            </h5>
+                            <span class="badge fs-6" id="detail-status-badge">—</span>
+                        </div>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="small text-muted">Лікар</label>
+                                <p class="fw-semibold mb-0" id="detail-doctor">—</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small text-muted">Спеціальність</label>
+                                <p class="fw-semibold mb-0" id="detail-specialty">—</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small text-muted">Дата та час</label>
+                                <p class="fw-semibold mb-0" id="detail-datetime">—</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small text-muted">Дата створення запису</label>
+                                <p class="fw-semibold mb-0" id="detail-created">—</p>
+                            </div>
+                            <div class="col-12" id="detail-reason-row">
+                                <label class="small text-muted">Причина звернення</label>
+                                <p class="mb-0" id="detail-reason">—</p>
+                            </div>
+                        </div>
+
+                        <!-- Кнопка скасування -->
+                        <div class="mt-4" id="cancel-btn-row">
+                            <button class="btn btn-outline-danger" id="cancel-appointment-btn">
+                                <i class="bi bi-x-circle me-1"></i>Скасувати запис
+                            </button>
+                        </div>
+
+                        <div class="alert alert-danger mt-3 d-none" id="cancel-error"></div>
+                    </div>
+                </div>
+
+                <!-- Медична картка (якщо завершено) -->
+                <div class="card border-0 shadow-sm d-none" id="medical-record-card">
+                    <div class="card-header bg-success text-white py-3">
+                        <h5 class="mb-0" id="medical-card-title">
+                            <i class="bi bi-file-medical me-2"></i>Результати прийому
+                        </h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <label class="small text-muted fw-semibold">ДІАГНОЗ</label>
+                            <p class="mb-0 p-2 bg-light rounded" id="mr-diagnosis">—</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small text-muted fw-semibold">ПРИЗНАЧЕННЯ / ЛІКУВАННЯ</label>
+                            <p class="mb-0 p-2 bg-light rounded" id="mr-treatment">—</p>
+                        </div>
+                        <small class="text-muted">Дата запису: <span id="mr-created">—</span></small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Права панель -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h6 class="fw-bold mb-3" id="detail-side-title">
+                            <i class="bi bi-person-badge me-2 text-primary"></i>Лікар
+                        </h6>
+                        <!-- Лікар (для пацієнта) -->
+                        <div id="detail-doctor-panel">
+                            <div class="text-center mb-3">
+                                <img src="/static/images/doctor-default.svg" alt=""
+                                     class="rounded-circle" style="width:70px;height:70px;object-fit:cover"
+                                     id="detail-doctor-photo"
+                                     onerror="this.onerror=null;this.src='/static/images/doctor-default.svg'">
+                            </div>
+                            <p class="text-center fw-semibold mb-1" id="detail-doctor-name">—</p>
+                            <p class="text-center text-muted small" id="detail-doctor-specialty">—</p>
+                            <div class="d-grid">
+                                <a href="#" class="btn btn-outline-primary btn-sm" id="detail-doctor-link">
+                                    <i class="bi bi-person me-1"></i>Профіль лікаря
+                                </a>
+                            </div>
+                        </div>
+                        <!-- Пацієнт (для лікаря, прихований за замовчуванням) -->
+                        <div id="detail-patient-panel" class="d-none">
+                            <div class="text-center mb-3">
+                                <div class="rounded-circle bg-primary-soft d-flex align-items-center justify-content-center mx-auto"
+                                     style="width:70px;height:70px;font-size:2rem;">
+                                    <i class="bi bi-person text-primary"></i>
+                                </div>
+                            </div>
+                            <p class="text-center fw-semibold mb-1" id="detail-patient-name">—</p>
+                            <p class="text-center text-muted small mb-2">
+                                <i class="bi bi-telephone me-1"></i><span id="detail-patient-phone">—</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const APPOINTMENT_ID = {{ appointment_id }};
+</script>
+<script src="/static/js/appointment-detail.js"></script>
+{% endblock %}

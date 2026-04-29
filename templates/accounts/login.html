@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block title %}Вхід — Mediculus{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5 col-lg-4">
+
+            <div class="text-center mb-4">
+                <i class="bi bi-heart-pulse-fill text-primary" style="font-size:3rem"></i>
+                <h2 class="fw-bold mt-2">Вхід в систему</h2>
+                <p class="text-muted">Увійдіть до свого акаунту Mediculus</p>
+            </div>
+
+            <div class="alert alert-danger d-none" id="login-error" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <span id="login-error-msg"></span>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+
+                    <!-- Крок 1: Email -->
+                    <div id="step-email">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-envelope text-muted"></i>
+                                </span>
+                                <input type="email" class="form-control" id="login-email"
+                                       placeholder="your@email.com" required autocomplete="email">
+                            </div>
+                            <div class="form-text text-muted mt-2">
+                                <i class="bi bi-info-circle me-1"></i>Вказуючи свій email, ви даєте згоду на отримання листів від Mediculus
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary w-100 py-2" id="next-btn">
+                            <span class="spinner-border spinner-border-sm d-none me-2" id="next-spinner"></span>
+                            Далі <i class="bi bi-arrow-right ms-1"></i>
+                        </button>
+                    </div>
+
+                    <!-- Крок 2: Пароль (прихований) -->
+                    <div id="step-password" class="d-none">
+                        <!-- Відображення email з кнопкою Змінити -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-envelope text-muted"></i>
+                                </span>
+                                <input type="email" class="form-control bg-light" id="login-email-display"
+                                       disabled style="min-width:0; flex:1 1 0;">
+                                <button class="btn btn-outline-secondary flex-shrink-0" type="button"
+                                        id="change-email-btn" title="Змінити email">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Пароль -->
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label class="form-label fw-semibold mb-0">Пароль</label>
+                                <a href="/forgot-password/" class="text-muted small">Забули пароль?</a>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-lock text-muted"></i>
+                                </span>
+                                <input type="password" class="form-control" id="login-password"
+                                       placeholder="••••••••" required autocomplete="current-password">
+                                <button class="btn btn-outline-secondary" type="button" id="toggle-password">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Запам'ятати мене -->
+                        <div class="mb-4 d-flex align-items-center gap-2">
+                            <div class="form-check mb-0">
+                                <input class="form-check-input" type="checkbox" id="remember-me">
+                                <label class="form-check-label small" for="remember-me">
+                                    Запам'ятати мене на цьому пристрої
+                                </label>
+                            </div>
+                            <span tabindex="0" data-bs-toggle="tooltip"
+                                  title="Увімкніть цю опцію щоб при наступному відвідуванні автоматично авторизуватися на цьому пристрої. Використовуйте лише на особистих пристроях задля безпеки ваших даних">
+                                <i class="bi bi-info-circle text-muted" style="cursor:help"></i>
+                            </span>
+                        </div>
+
+                        <button type="button" class="btn btn-primary w-100 py-2" id="login-btn">
+                            <span class="spinner-border spinner-border-sm d-none me-2" id="login-spinner"></span>
+                            <i class="bi bi-box-arrow-in-right me-1"></i>Увійти
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <p class="text-muted mb-0">
+                    Немає акаунту?
+                    <a href="/register/" class="text-primary fw-semibold">Зареєструватись</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="/static/js/login.js"></script>
+{% endblock %}

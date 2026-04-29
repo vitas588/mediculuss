@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Мої пацієнти — Mediculus{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="fw-bold mb-1">Мої пацієнти</h1>
+            <p class="text-muted">Перегляд та управління записами на прийом</p>
+        </div>
+        <a href="/doctors/cabinet/" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left me-1"></i>Кабінет
+        </a>
+    </div>
+
+    <!-- Пошук та фільтри -->
+    <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body py-3">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label small text-muted mb-1">Пошук за пацієнтом</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" class="form-control" id="search-patient"
+                               placeholder="Ім'я або прізвище пацієнта">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small text-muted mb-1">Період</label>
+                    <select class="form-select" id="date-range-filter">
+                        <option value="all">За весь час</option>
+                        <option value="30">За 30 днів</option>
+                        <option value="180">За 180 днів</option>
+                        <option value="custom">Інший період</option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-none" id="date-from-col">
+                    <label class="form-label small text-muted mb-1">Від</label>
+                    <input type="date" class="form-control" id="date-from">
+                </div>
+                <div class="col-md-2 d-none" id="date-to-col">
+                    <label class="form-label small text-muted mb-1">До</label>
+                    <input type="date" class="form-control" id="date-to">
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-outline-secondary w-100" id="reset-filters-btn" title="Скинути">
+                        <i class="bi bi-x-circle"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Фільтри статусу -->
+    <ul class="nav nav-pills mb-4">
+        <li class="nav-item">
+            <button class="nav-link active" data-status="all">Всі</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-status="planned">Заплановані</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-status="completed">Завершені</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-status="cancelled">Скасовані</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-status="missed">Пропущені</button>
+        </li>
+    </ul>
+
+    <div id="doctor-appointments-list">
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>
+    </div>
+
+    <!-- Кнопка "Завантажити ще" -->
+    <div class="text-center mt-3 d-none" id="load-more-container">
+        <button class="btn btn-outline-primary" id="load-more-btn">
+            <i class="bi bi-arrow-down-circle me-1"></i>Завантажити ще
+        </button>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/doctor-appointments.js"></script>
+{% endblock %}

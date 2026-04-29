@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+
+{% block title %}Панель адміністратора — Mediculus{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stat-card { transition: transform 0.2s; }
+    .stat-card:hover { transform: translateY(-3px); }
+    .stat-icon { font-size: 2.5rem; opacity: 0.8; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h1 class="fw-bold mb-1">
+                <i class="bi bi-speedometer2 me-2 text-primary"></i>Панель статистики
+            </h1>
+            <p class="text-muted">Загальна статистика лікарні Mediculus</p>
+        </div>
+        <div>
+            <a href="/admin/" class="btn btn-outline-dark btn-sm">
+                <i class="bi bi-gear me-1"></i>Django Admin
+            </a>
+        </div>
+    </div>
+
+    <!-- Основна статистика -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm stat-card border-start border-primary border-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted small mb-1">Пацієнти</p>
+                            <h2 class="fw-bold text-primary mb-0">{{ stats.patients_count }}</h2>
+                        </div>
+                        <i class="bi bi-people stat-icon text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm stat-card border-start border-success border-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted small mb-1">Лікарі</p>
+                            <h2 class="fw-bold text-success mb-0">{{ stats.doctors_count }}</h2>
+                        </div>
+                        <i class="bi bi-person-badge stat-icon text-success"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm stat-card border-start border-info border-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted small mb-1">Всього записів</p>
+                            <h2 class="fw-bold text-info mb-0">{{ stats.appointments_total }}</h2>
+                        </div>
+                        <i class="bi bi-calendar3 stat-icon text-info"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm stat-card border-start border-warning border-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted small mb-1">Заплановані</p>
+                            <h2 class="fw-bold text-warning mb-0">{{ stats.appointments_planned }}</h2>
+                        </div>
+                        <i class="bi bi-clock stat-icon text-warning"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Записи за статусами -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <div class="progress mb-2" style="height:8px">
+                        {% if stats.appointments_total > 0 %}
+                        <div class="progress-bar bg-success"
+                             style="width:{{ stats.appointments_completed|floatformat:0 }}%"></div>
+                        {% endif %}
+                    </div>
+                    <h3 class="fw-bold text-success mb-0">{{ stats.appointments_completed }}</h3>
+                    <small class="text-muted">Завершені записи</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <div class="progress mb-2" style="height:8px">
+                        {% if stats.appointments_total > 0 %}
+                        <div class="progress-bar bg-primary"
+                             style="width:{{ stats.appointments_planned|floatformat:0 }}%"></div>
+                        {% endif %}
+                    </div>
+                    <h3 class="fw-bold text-primary mb-0">{{ stats.appointments_planned }}</h3>
+                    <small class="text-muted">Заплановані записи</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <div class="progress mb-2" style="height:8px">
+                        {% if stats.appointments_total > 0 %}
+                        <div class="progress-bar bg-danger"
+                             style="width:{{ stats.appointments_cancelled|floatformat:0 }}%"></div>
+                        {% endif %}
+                    </div>
+                    <h3 class="fw-bold text-danger mb-0">{{ stats.appointments_cancelled }}</h3>
+                    <small class="text-muted">Скасовані записи</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <div class="progress mb-2" style="height:8px">
+                        {% if stats.appointments_total > 0 %}
+                        <div class="progress-bar"
+                             style="width:{{ stats.appointments_missed|floatformat:0 }}%; background-color:#fd7e14"></div>
+                        {% endif %}
+                    </div>
+                    <h3 class="fw-bold mb-0" style="color:#fd7e14">{{ stats.appointments_missed }}</h3>
+                    <small class="text-muted">Пропущені записи</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Графік записів -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold">
+                <i class="bi bi-bar-chart me-2 text-primary"></i>Записи
+            </h5>
+            <div class="btn-group btn-group-sm" role="group" id="chart-mode-group">
+                <button type="button" class="btn btn-outline-primary" data-mode="daily">По днях</button>
+                <button type="button" class="btn btn-outline-primary" data-mode="weekly">По тижнях</button>
+                <button type="button" class="btn btn-primary active" data-mode="monthly">По місяцях</button>
+            </div>
+        </div>
+        <div class="card-body p-4">
+            <canvas id="appointmentsChart" height="100"></canvas>
+        </div>
+    </div>
+
+    <!-- Швидкий доступ до адміна -->
+    <div class="mb-3">
+        <h5 class="fw-bold mb-3">Управління системою</h5>
+        <div class="row g-3 row-cols-2 row-cols-md-5">
+            <div class="col">
+                <a href="/admin/accounts/user/" class="card border-0 shadow-sm text-decoration-none text-dark h-100 quick-link-card">
+                    <div class="card-body text-center p-3">
+                        <i class="bi bi-people text-primary mb-2" style="font-size:1.5rem"></i>
+                        <p class="fw-semibold mb-0 small">Користувачі</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a href="/admin/doctors/doctor/" class="card border-0 shadow-sm text-decoration-none text-dark h-100 quick-link-card">
+                    <div class="card-body text-center p-3">
+                        <i class="bi bi-person-badge text-success mb-2" style="font-size:1.5rem"></i>
+                        <p class="fw-semibold mb-0 small">Лікарі</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a href="/admin/appointments/appointment/" class="card border-0 shadow-sm text-decoration-none text-dark h-100 quick-link-card">
+                    <div class="card-body text-center p-3">
+                        <i class="bi bi-calendar-check text-info mb-2" style="font-size:1.5rem"></i>
+                        <p class="fw-semibold mb-0 small">Записи</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a href="/admin/doctors/specialty/" class="card border-0 shadow-sm text-decoration-none text-dark h-100 quick-link-card">
+                    <div class="card-body text-center p-3">
+                        <i class="bi bi-grid text-warning mb-2" style="font-size:1.5rem"></i>
+                        <p class="fw-semibold mb-0 small">Спеціальності</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a href="/admin/doctors/doctorschedule/" class="card border-0 shadow-sm text-decoration-none text-dark h-100 quick-link-card">
+                    <div class="card-body text-center p-3">
+                        <i class="bi bi-clock-history text-secondary mb-2" style="font-size:1.5rem"></i>
+                        <p class="fw-semibold mb-0 small">Графік роботи лікарів</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Chart.js для графіків -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script>
+    // Набори даних, передані з Django view
+    const datasets = {
+        daily:   { labels: {{ daily_labels|safe }},   data: {{ daily_data|safe }} },
+        weekly:  { labels: {{ weekly_labels|safe }},  data: {{ weekly_data|safe }} },
+        monthly: { labels: {{ monthly_labels|safe }}, data: {{ monthly_data|safe }} },
+    };
+
+    const ctx = document.getElementById('appointmentsChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: datasets.monthly.labels,
+            datasets: [{
+                label: 'Кількість записів',
+                data: datasets.monthly.data,
+                backgroundColor: 'rgba(13, 110, 253, 0.6)',
+                borderColor: 'rgba(13, 110, 253, 1)',
+                borderWidth: 2,
+                borderRadius: 4,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                title: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1 } }
+            }
+        }
+    });
+
+    // Перемикачі режимів
+    document.querySelectorAll('#chart-mode-group button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const mode = btn.dataset.mode;
+            // Оновити активний стиль кнопок
+            document.querySelectorAll('#chart-mode-group button').forEach(b => {
+                b.classList.toggle('btn-primary', b === btn);
+                b.classList.toggle('active', b === btn);
+                b.classList.toggle('btn-outline-primary', b !== btn);
+            });
+            // Оновити дані графіка
+            chart.data.labels = datasets[mode].labels;
+            chart.data.datasets[0].data = datasets[mode].data;
+            chart.update();
+        });
+    });
+</script>
+{% endblock %}
