@@ -43,9 +43,10 @@ def send_email_async(subject, body, from_email, to_list, html=False):
                 msg.content_subtype = 'html'
                 msg.send()
             else:
-                send_mail(subject, body, from_email, to_list, fail_silently=True)
-        except Exception:
-            pass
+                send_mail(subject, body, from_email, to_list, fail_silently=False)
+            print(f"EMAIL SENT OK to {to_list}", flush=True)
+        except Exception as e:
+            print(f"EMAIL ERROR: {e}", flush=True)
     thread = threading.Thread(target=_send, daemon=True)
     thread.start()
 
