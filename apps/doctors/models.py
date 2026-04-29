@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from cloudinary.models import CloudinaryField
 from apps.accounts.models import User
 
 
@@ -53,8 +54,8 @@ class Doctor(models.Model):
         blank=True,
         verbose_name='Опис / про лікаря'
     )
-    photo = models.ImageField(
-        upload_to='doctors/',
+    photo = CloudinaryField(
+        'image',
         blank=True,
         null=True,
         verbose_name='Фото'

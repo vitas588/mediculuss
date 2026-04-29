@@ -65,20 +65,9 @@ class DoctorDetailSerializer(serializers.ModelSerializer):
         return None
 
 
-class DoctorPhotoSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Doctor
-        fields = ['photo']
-
-    def validate_photo(self, value):
-        max_size = 5 * 1024 * 1024
-        if value.size > max_size:
-            raise serializers.ValidationError('Розмір фото не може перевищувати 5 МБ.')
-        allowed_types = ['image/jpeg', 'image/png', 'image/webp']
-        if hasattr(value, 'content_type') and value.content_type not in allowed_types:
-            raise serializers.ValidationError('Дозволені формати: JPEG, PNG, WebP.')
-        return value
+class DoctorPhotoSerializer(serializers.Serializer):
+    """Використовується лише для документації схеми API (drf-spectacular)."""
+    photo = serializers.ImageField()
 
 
 class AvailableSlotSerializer(serializers.Serializer):

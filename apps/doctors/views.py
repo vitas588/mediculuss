@@ -1,5 +1,4 @@
 from datetime import date, datetime, timedelta
-from django.conf import settings
 from django.utils import timezone
 from rest_framework import generics, status
 from rest_framework.views import APIView
@@ -11,6 +10,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
+import cloudinary.uploader
 from apps.accounts.permissions import IsDoctor
 from .models import Doctor, Specialty, DoctorSchedule
 from .serializers import (
@@ -220,18 +220,41 @@ class DoctorPhotoUploadView(APIView):
         except Doctor.DoesNotExist:
             return Response({'error': 'Профіль лікаря не знайдено.'}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = DoctorPhotoSerializer(doctor, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            photo_url = doctor.photo.url if doctor.photo else None
-            print(f"DEFAULT_FILE_STORAGE: {getattr(settings, 'DEFAULT_FILE_STORAGE', 'default')}", flush=True)
-            print(f"CLOUDINARY_CLOUD_NAME: {settings.CLOUDINARY_STORAGE.get('CLOUD_NAME', 'NOT SET')}", flush=True)
-            print(f"Photo URL after save: {photo_url}", flush=True)
-            return Response({
-                'message': 'Фото успішно оновлено.',
-                'photo_url': photo_url
-            })
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        photo_file = request.FILES.get('photo')
+        if not photo_file:
+            return Response({'error': 'Фото не надано.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        max_size = 5 * 1024 * 1024
+        if photo_file.size > max_size:
+            return Response({'error': 'Розмір фото не може перевищувати 5 МБ.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        allowed_types = ['image/jpeg', 'image/png', 'image/webp']
+        if hasattr(photo_file, 'content_type') and photo_file.content_type not in allowed_types:
+            return Response({'error': 'Дозволені формати: JPEG, PNG, WebP.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Delete old photo from Cloudinary if one exists
+        if doctor.photo:
+            try:
+                old_public_id = str(doctor.photo)
+                cloudinary.uploader.destroy(old_public_id, resource_type='image')
+            except Exception as e:
+                print(f"CLOUDINARY DELETE OLD: {e}", flush=True)
+
+        # Upload new photo directly via SDK
+        result = cloudinary.uploader.upload(
+            photo_file,
+            folder='doctors',
+            resource_type='image',
+        )
+        print(f"CLOUDINARY UPLOAD OK: {result.get('secure_url')}", flush=True)
+
+        doctor.photo = result['public_id']
+        doctor.save(update_fields=['photo'])
+
+        return Response({
+            'message': 'Фото успішно оновлено.',
+            'photo_url': result['secure_url'],
+        })
 
     @extend_schema(summary='Видалити фото лікаря', tags=['Лікарі'])
     def delete(self, request):
@@ -241,7 +264,11 @@ class DoctorPhotoUploadView(APIView):
             return Response({'error': 'Профіль лікаря не знайдено.'}, status=status.HTTP_404_NOT_FOUND)
 
         if doctor.photo:
-            doctor.photo.delete(save=False)
+            try:
+                old_public_id = str(doctor.photo)
+                cloudinary.uploader.destroy(old_public_id, resource_type='image')
+            except Exception as e:
+                print(f"CLOUDINARY DELETE: {e}", flush=True)
             doctor.photo = None
             doctor.save(update_fields=['photo'])
 
