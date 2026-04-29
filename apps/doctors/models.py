@@ -55,9 +55,9 @@ class Doctor(models.Model):
         verbose_name='Опис / про лікаря'
     )
     photo = CloudinaryField(
-        'image',
         blank=True,
         null=True,
+        resource_type='image',
         verbose_name='Фото'
     )
     is_active = models.BooleanField(
