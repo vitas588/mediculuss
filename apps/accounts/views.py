@@ -1,10 +1,11 @@
 import re
+import os
 import random
 import string
 import secrets
 import threading
+import requests
 from datetime import timedelta
-from django.core.mail import send_mail, EmailMessage
 from django.conf import settings as django_settings
 from django.utils import timezone
 from rest_framework import status, generics
@@ -34,22 +35,26 @@ def _generate_code():
 def send_email_async(subject, body, from_email, to_list, html=False):
     def _send():
         try:
+            api_key = os.environ.get('BREVO_API_KEY')
+            url = "https://api.brevo.com/v3/smtp/email"
+            headers = {
+                "accept": "application/json",
+                "api-key": api_key,
+                "content-type": "application/json",
+            }
+            data = {
+                "sender": {"email": from_email, "name": "Mediculus"},
+                "to": [{"email": email} for email in to_list],
+                "subject": subject,
+            }
             if html:
-                msg = EmailMessage()
-                msg.subject = subject
-                msg.body = body
-                msg.from_email = from_email
-                msg.to = to_list
-                msg.content_subtype = 'html'
-                msg.send()
+                data["htmlContent"] = body
             else:
-                send_mail(subject, body, from_email, to_list, fail_silently=False)
-            print(f"EMAIL SENT OK to {to_list}", flush=True)
+                data["textContent"] = body
+            response = requests.post(url, json=data, headers=headers)
+            print(f"EMAIL SENT OK: {response.status_code} {response.text}", flush=True)
         except Exception as e:
-            import traceback
-            print(f"EMAIL ERROR type: {type(e).__name__}", flush=True)
-            print(f"EMAIL ERROR detail: {e}", flush=True)
-            print(f"EMAIL ERROR traceback: {traceback.format_exc()}", flush=True)
+            print(f"EMAIL ERROR: {e}", flush=True)
     thread = threading.Thread(target=_send, daemon=True)
     thread.start()
 
