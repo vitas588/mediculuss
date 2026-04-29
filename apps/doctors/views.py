@@ -222,7 +222,7 @@ class DoctorPhotoUploadView(APIView):
         serializer = DoctorPhotoSerializer(doctor, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            photo_url = request.build_absolute_uri(doctor.photo.url) if doctor.photo else None
+            photo_url = doctor.photo.url if doctor.photo else None
             return Response({
                 'message': 'Фото успішно оновлено.',
                 'photo_url': photo_url

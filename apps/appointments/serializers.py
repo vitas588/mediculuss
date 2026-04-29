@@ -50,9 +50,8 @@ class AppointmentListSerializer(serializers.ModelSerializer):
         return hasattr(obj, 'medical_record')
 
     def get_doctor_photo_url(self, obj):
-        request = self.context.get('request')
-        if obj.doctor.photo and request:
-            return request.build_absolute_uri(obj.doctor.photo.url)
+        if obj.doctor.photo:
+            return obj.doctor.photo.url
         return None
 
 
@@ -89,9 +88,8 @@ class AppointmentDetailSerializer(serializers.ModelSerializer):
         return obj.doctor.get_full_name()
 
     def get_doctor_photo(self, obj):
-        request = self.context.get('request')
-        if obj.doctor.photo and request:
-            return request.build_absolute_uri(obj.doctor.photo.url)
+        if obj.doctor.photo:
+            return obj.doctor.photo.url
         return None
 
 

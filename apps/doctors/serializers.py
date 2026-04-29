@@ -35,9 +35,8 @@ class DoctorListSerializer(serializers.ModelSerializer):
         return obj.get_full_name()
 
     def get_photo_url(self, obj):
-        request = self.context.get('request')
-        if obj.photo and request:
-            return request.build_absolute_uri(obj.photo.url)
+        if obj.photo:
+            return obj.photo.url
         return None
 
 
@@ -61,9 +60,8 @@ class DoctorDetailSerializer(serializers.ModelSerializer):
         return obj.get_full_name()
 
     def get_photo_url(self, obj):
-        request = self.context.get('request')
-        if obj.photo and request:
-            return request.build_absolute_uri(obj.photo.url)
+        if obj.photo:
+            return obj.photo.url
         return None
 
 
