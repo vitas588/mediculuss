@@ -30,6 +30,10 @@ django-filter==24.3
 # HTTP client (Brevo API)
 requests==2.32.3
 
+# Cloudinary (media storage for production)
+cloudinary==1.36.0
+django-cloudinary-storage==0.3.0
+
 # WSGI server for production
 gunicorn==21.2.0
 
