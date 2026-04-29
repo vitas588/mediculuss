@@ -2,8 +2,9 @@ import re
 import random
 import string
 import secrets
+import threading
 from datetime import timedelta
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 from django.conf import settings as django_settings
 from django.utils import timezone
 from rest_framework import status, generics
@@ -28,6 +29,25 @@ from .serializers import (
 def _generate_code():
     """Generate a random 6-digit verification code."""
     return ''.join(random.choices(string.digits, k=6))
+
+
+def send_email_async(subject, body, from_email, to_list, html=False):
+    def _send():
+        try:
+            if html:
+                msg = EmailMessage()
+                msg.subject = subject
+                msg.body = body
+                msg.from_email = from_email
+                msg.to = to_list
+                msg.content_subtype = 'html'
+                msg.send()
+            else:
+                send_mail(subject, body, from_email, to_list, fail_silently=True)
+        except Exception:
+            pass
+    thread = threading.Thread(target=_send, daemon=True)
+    thread.start()
 
 
 class RegisterView(APIView):
@@ -57,17 +77,16 @@ class RegisterView(APIView):
             user.email_verified = False
             user.save(update_fields=['email_verification_code', 'email_verification_code_expires', 'email_verified'])
 
-            send_mail(
+            send_email_async(
                 subject='Підтвердження email — Mediculus',
-                message=(
+                body=(
                     f'Вітаємо, {user.first_name}!\n\n'
                     f'Ваш код підтвердження: {code}\n\n'
                     f'Код дійсний 5 хвилин.\n\n'
                     f'Якщо ви не реєструвались — проігноруйте цей лист.'
                 ),
                 from_email=django_settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[user.email],
-                fail_silently=True,
+                to_list=[user.email],
             )
 
             return Response({
@@ -317,15 +336,14 @@ class ResendVerificationView(APIView):
         user.email_verification_code_expires = timezone.now() + timedelta(minutes=5)
         user.save(update_fields=['email_verification_code', 'email_verification_code_expires'])
 
-        send_mail(
+        send_email_async(
             subject='Підтвердження email — Mediculus',
-            message=(
+            body=(
                 f'Ваш новий код підтвердження: {code}\n\n'
                 f'Код дійсний 5 хвилин.'
             ),
             from_email=django_settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[user.email],
-            fail_silently=True,
+            to_list=[user.email],
         )
 
         return Response({'message': 'Код надіслано повторно. Перевірте пошту.'})
@@ -352,17 +370,16 @@ class ForgotPasswordView(APIView):
         base_url = request.build_absolute_uri('/').rstrip('/')
         reset_url = f'{base_url}/reset-password/{token}/'
 
-        send_mail(
+        send_email_async(
             subject='Відновлення пароля — Mediculus',
-            message=(
+            body=(
                 f'Для відновлення пароля перейдіть за посиланням:\n'
                 f'{reset_url}\n\n'
                 f'Посилання дійсне 1 годину.\n\n'
                 f'Якщо ви не запитували відновлення — проігноруйте цей лист.'
             ),
             from_email=django_settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[user.email],
-            fail_silently=True,
+            to_list=[user.email],
         )
 
         return Response({'message': 'Лист з інструкціями для відновлення паролю надіслано на вашу пошту.'})

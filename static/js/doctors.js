@@ -13,6 +13,16 @@ function getYearsWord(years) {
     return 'років';
 }
 
+function toRelativePath(url) {
+    if (!url) return null;
+    try {
+        const parsed = new URL(url);
+        return parsed.pathname + parsed.search;
+    } catch (e) {
+        return url;
+    }
+}
+
 let currentSearch = '';
 let currentSpecialty = '';
 let nextPageUrl = null;
@@ -54,7 +64,7 @@ async function loadDoctors() {
 
         const doctors = data.results || (Array.isArray(data) ? data : []);
         const total = data.count || doctors.length;
-        nextPageUrl = data.next || null;
+        nextPageUrl = toRelativePath(data.next);
 
         if (countEl) countEl.textContent = `Знайдено: ${total} лікар(ів)`;
 
@@ -93,7 +103,7 @@ async function loadMore() {
         const data = await response.json();
 
         const doctors = data.results || [];
-        nextPageUrl = data.next || null;
+        nextPageUrl = toRelativePath(data.next);
 
         grid.insertAdjacentHTML('beforeend', doctors.map(renderDoctorCard).join(''));
 
