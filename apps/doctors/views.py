@@ -1,4 +1,5 @@
 from datetime import date, datetime, timedelta
+from django.conf import settings
 from django.utils import timezone
 from rest_framework import generics, status
 from rest_framework.views import APIView
@@ -223,6 +224,9 @@ class DoctorPhotoUploadView(APIView):
         if serializer.is_valid():
             serializer.save()
             photo_url = doctor.photo.url if doctor.photo else None
+            print(f"DEFAULT_FILE_STORAGE: {getattr(settings, 'DEFAULT_FILE_STORAGE', 'default')}", flush=True)
+            print(f"CLOUDINARY_CLOUD_NAME: {settings.CLOUDINARY_STORAGE.get('CLOUD_NAME', 'NOT SET')}", flush=True)
+            print(f"Photo URL after save: {photo_url}", flush=True)
             return Response({
                 'message': 'Фото успішно оновлено.',
                 'photo_url': photo_url
