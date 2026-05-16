@@ -232,7 +232,6 @@ class DoctorPhotoUploadView(APIView):
         if hasattr(photo_file, 'content_type') and photo_file.content_type not in allowed_types:
             return Response({'error': 'Дозволені формати: JPEG, PNG, WebP.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Delete old photo from Cloudinary if one exists
         if doctor.photo:
             try:
                 old_public_id = str(doctor.photo)
@@ -240,7 +239,6 @@ class DoctorPhotoUploadView(APIView):
             except Exception as e:
                 print(f"CLOUDINARY DELETE OLD: {e}", flush=True)
 
-        # Upload new photo directly via SDK
         result = cloudinary.uploader.upload(
             photo_file,
             folder='doctors',
