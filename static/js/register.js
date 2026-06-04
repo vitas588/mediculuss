@@ -146,13 +146,18 @@ function setupRegisterForm() {
 }
 
 function setupTogglePassword() {
-    const btn = document.getElementById('toggle-pass');
-    const input = document.getElementById('reg-password');
-    if (!btn || !input) return;
-
-    btn.addEventListener('click', () => {
-        const isPass = input.type === 'password';
-        input.type = isPass ? 'text' : 'password';
-        btn.querySelector('i').className = isPass ? 'bi bi-eye-slash' : 'bi bi-eye';
+    const pairs = [
+        { btnId: 'toggle-pass', inputId: 'reg-password' },
+        { btnId: 'toggle-pass-confirm', inputId: 'reg-password-confirm' },
+    ];
+    pairs.forEach(({ btnId, inputId }) => {
+        const btn = document.getElementById(btnId);
+        const input = document.getElementById(inputId);
+        if (!btn || !input) return;
+        btn.addEventListener('click', () => {
+            const isPass = input.type === 'password';
+            input.type = isPass ? 'text' : 'password';
+            btn.querySelector('i').className = isPass ? 'bi bi-eye-slash' : 'bi bi-eye';
+        });
     });
 }

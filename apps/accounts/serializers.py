@@ -32,7 +32,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def validate_email(self, value):
         if User.objects.filter(email=value.lower()).exists():
-            raise serializers.ValidationError('Користувач з таким email вже існує.')
+            raise serializers.ValidationError('Користувач з таким Email вже існує.')
         return value.lower()
 
     def validate(self, data):

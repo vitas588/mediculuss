@@ -6,6 +6,12 @@
   Bootstrap 5 використовується як основа.
 */
 
+/* ---- Приховати нативний глазік браузера у полях пароля (Edge/Chrome) ---- */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
 /* ---- Шрифт для дислексиків (Кирилиця + Латиниця) ---- */
 @font-face {
     font-family: 'OpenDyslexicUkr';
