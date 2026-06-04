@@ -29,6 +29,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             'first_name', 'last_name', 'patronymic', 'phone',
             'date_of_birth', 'gender'
         ]
+        extra_kwargs = {
+            'email': {'validators': []},
+        }
 
     def validate_email(self, value):
         if User.objects.filter(email=value.lower()).exists():
