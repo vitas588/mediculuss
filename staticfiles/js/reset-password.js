@@ -27,11 +27,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Токен валідний — показуємо форму
     document.getElementById('rp-btn')?.addEventListener('click', resetPassword);
-    document.getElementById('rp-toggle')?.addEventListener('click', () => {
-        const input = document.getElementById('rp-password');
-        const icon = document.getElementById('rp-toggle').querySelector('i');
-        input.type = input.type === 'password' ? 'text' : 'password';
-        icon.className = input.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';
+    [['rp-toggle', 'rp-password'], ['rp-toggle-confirm', 'rp-password-confirm']].forEach(([btnId, inputId]) => {
+        document.getElementById(btnId)?.addEventListener('click', () => {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(btnId).querySelector('i');
+            input.type = input.type === 'password' ? 'text' : 'password';
+            icon.className = input.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';
+        });
     });
 });
 
